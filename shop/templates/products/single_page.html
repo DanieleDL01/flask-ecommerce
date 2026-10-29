@@ -1,0 +1,105 @@
+{% extends 'layout.html' %}
+{% block content %}
+{% include 'navbar.html' %}
+
+<div class="container mt-5">
+    <div class="row">
+        <div class="col-md-6" id="b_image">
+            <img src="{{url_for('static', filename='images/'+product.image_1)}}" alt="{{product.name}}" width="400" height="400">
+        </div>
+        <div class="col-md-6">
+            <h4 class="c_header" style="display: flex; justify-content: space-between; align-items: center; position: relative;">
+                <span class="left" style="font-size: 1.4em; font-weight: bold; position: relative">{{product.name}}</span>
+                <span class="spacer" style="flex-grow: 1"> </span>
+                {% if product.discount > 0 %}
+                <span class="right big-text" style="font-size: 1.4em; font-weight: bold; position: relative">
+                    <span class="price-original" style="text-decoration: line-through; font-size: 1em; color: grey;">
+                        {{product.price}}€
+                    </span>
+                    <span class="price-discounted" style="color: green; margin-left: 10px;">
+                        {{product.price*(100 - product.discount)/100}}€
+                    </span>
+                </span>
+
+                <div class="discount-tag">
+                    {{product.discount}}% OFF
+                </div>
+                {% else %}
+                    <span class="right big-text" style="font-size: 1.4em; font-weight: bold; position: relative">
+                        <span class="price-discounted" style="color: black; margin-left: 10px;">
+                            {{product.price}}€
+                        </span>
+                    </span>
+                {% endif %}
+            </h4>
+            <hr>
+            <b>Description:</b>
+            <p>{{product.description}}</p>
+            <hr>
+            {% if autenticato %}
+                {% if customer.seller %}
+                    {% if customer.id == product.seller_id %}
+                        <h6>This item is yours</h6>
+                        <a href="{{ url_for('updateproduct', id=product.id) }}" class="btn btn-outline-info">Edit</a>
+                    {% else %}
+                        <h6>Login as a customer in order to buy</h6>
+                        <a href="{{url_for('customerLogout')}}" class="btn btn-outline-warning">Logout</a>
+                    {% endif %}
+                {% else %}
+                    <div class="col-md-13 d-flex justify-content-end">
+                        <form action="{{url_for('addcart')}}" method="POST" class="d-flex flex-column align-items-start" style="width: 200px;">
+                            <input type="hidden" name="product_id" value="{{product.id}}">
+
+                            <label for="colors" style="align-self: end; font-weight: 500;">Colors</label>
+                            {% set colors = product.colors.split(',') %}
+                            <select name="colors" id="colors" class="form-control mb-2" style="width: 120px; align-self: end; ">
+                                {% for color in colors %}
+                                    {% set col = color.split(':') %}
+                                    <option value="{{col[0]}}">{{col[0]|capitalize}}</option>
+                                {% endfor %}
+                            </select>
+
+                            <label form="" style="align-self: end; font-weight: 500;" class="mt-2">Quantity</label>
+                            <input type="number" name="quantity" value="1" min="1" max="{{product.stock}}" class="form-control form-control-sm mb-2" style="width: 50px; height: 30px; align-self: end">
+
+                            <button type="submit" class="btn btn-sm btn-warning mt-4" style="align-self: end">Add to Cart</button>
+                        </form>
+                    </div>
+                {% endif %}
+            {% else %}
+                <div class="col-md-13 d-flex justify-content-end">
+                    <h4>Please login in order to purchase</h4>
+                    <hr>
+                    <a class="btn btn-outline-info" href="{{url_for('customerLogin')}}">Login</a>
+                    <a class="btn btn-outline-warning" href="{{url_for('customer_registration')}}">Register</a>
+                </div>
+            {% endif %}
+
+
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-12 mt-3" id="s_image">
+            <hr>
+            <img src="{{url_for('static', filename='images/'+product.image_1)}}" alt="{{product.name}}" width="120" height="120" class="p-3">
+            <img src="{{url_for('static', filename='images/'+product.image_2)}}" alt="{{product.name}}" width="120" height="120" class="p-3">
+            <img src="{{url_for('static', filename='images/'+product.image_3)}}" alt="{{product.name}}" width="120" height="120" class="p-3">
+        </div>
+    </div>
+</div>
+
+<script>
+    var b_image=document.getElementById('b_image');
+    var s_image=document.getElementById('s_image').getElementsByTagName('img')
+    for (var i=0; i<s_image.length; i++) {
+        s_image[i].addEventListener('click', full_image);
+    };
+
+    function full_image() {
+        var ImageSRC=this.getAttribute('src');
+        b_image.innerHTML="<img src=" + ImageSRC + " width='400' height='400'>";
+    }
+</script>
+
+
+{% endblock content %}

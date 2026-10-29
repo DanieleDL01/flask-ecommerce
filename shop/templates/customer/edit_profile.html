@@ -1,0 +1,62 @@
+{% extends 'layout.html' %}
+{% block content %}
+    {% from "_formhelpers.html" import render_field %}
+    <div class="container">
+        <div class="row">
+            <div class="col-md-2"></div>
+            <div class="col-md-8">
+                <h2 class="bg-info text-center">Update Profile</h2>
+            </div>
+            <div class="col-md-2"></div>
+        </div>
+        <form action="" method="POST" enctype="multipart/form-data">
+            {{form.csrf_token}}
+            <div class="row">
+                <div class="col-md-2"></div>
+                <div class="col-md-4">
+                    {{ render_field(form.username, class="form-control") }}
+                    {{ render_field(form.name, class="form-control") }}
+                    {{ render_field(form.profile, class="form-control", required=False )}}
+                </div>
+                <div class="col-md-4">
+                    {{ render_field(form.contact, class="form-control") }}
+                    {{ render_field(form.country, class="form-control") }}
+                    {{ render_field(form.state, class="form-control") }}
+                    {{ render_field(form.city, class="form-control") }}
+                    {{ render_field(form.zipcode, class="form-control") }}
+                    {{ render_field(form.address, class="form-control") }}
+
+                </div>
+                <div class="col-md-2"></div>
+
+            </div>
+            <div class="row">
+                <hr>
+            </div>
+            <div class="row">
+                <button type="submit" class="btn btn-info mt-2 mb-2" style="margin-top: 20px">Update Profile</button>
+            </div>
+        </form>
+                <a href="{{url_for('profile')}}" class="btn btn-danger" style="margin-top: -80px; margin-left: 150px">Cancel</a>
+            </div>
+
+    </div>
+{% endblock content %}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

@@ -1,0 +1,57 @@
+{% extends 'layout.html' %}
+{% block content %}
+
+{% include 'navbar.html' %}
+<div class="container">
+    <div class="row">
+        {% for product in products %}
+            <div class="col-md-3 mt-3">
+                <div class="card">
+                    {% if product.discount > 0 %}
+                        <h5 class="text-overlay mt-1 ml-1" style="text-shadow: 1px 1px 2px #000; color: white; transform: rotate(-5deg)">{{product.discount}}%</h5>
+                    {% endif %}
+                    <img src="{{url_for('static', filename='images/' + product.image_1)}}" alt="{{product.name}}" class="card-img-top" height="200">
+                    <div class="card-body">
+                        <h5 class="text-center">{{product.name}}</h5>
+                    </div>
+                    <div class="card-footer">
+                        <div ><a href="{{url_for('single_page', id=product.id)}}" class="float-left btn btn-sm btn-primary">details</a><h4 class="float-right">{{product.price}}€</h4></div>
+                    </div>
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+        <div class="row">
+            <div class="col text-center">
+                {% if products.has_prev %}
+                    <!--<a href="{{url_for('home', page=products.prev_num)}}" class="btn btn-outline-info btn-sm mt-3">Previous</a>-->
+                    <a href="{{ url_for('result', page=products.prev_num, q=request.args.get('q', ''), min=request.args.get('min', 0), max=request.args.get('max', 100000), order=request.args.get('order', 'date_new') )}}" class="btn btn-outline-info btn-sm mt-3">Previous</a>
+
+                {% endif %}
+
+                {% if products.total>4 %}
+
+                    {% for page_num in products.iter_pages(left_edge=1, right_edge=1, left_current=2, right_current=2) %}
+                        {% if page_num %}
+                            {% if products.page==page_num %}
+                                <a href="{{ url_for('result', page=page_num, q=request.args.get('q', ''), min=request.args.get('min', 0), max=request.args.get('max', 100000), order=request.args.get('order', 'date_new')) }}" class="btn btn-info btn-sm mt-3"> {{ page_num }}</a>
+                                <!--<a href="{{url_for('result', page=page_num)}}" class="btn btn-info btn-sm mt-3"> {{page_num}}</a>-->
+                            {% else %}
+                                <a href="{{ url_for('result', page=page_num, q=request.args.get('q', ''), min=request.args.get('min', 0), max=request.args.get('max', 100000), order=request.args.get('order', 'date_new')) }}" class="btn btn-outline-info btn-sm mt-3"> {{ page_num }}</a>
+                                <!--<a href="{{url_for('result', page=page_num)}}" class="btn btn-outline-info btn-sm mt-3"> {{page_num}}</a>-->
+                            {% endif %}
+                        {% else %}
+                            ...
+                        {% endif %}
+                    {% endfor %}
+                {% endif %}
+                {% if products.has_next %}
+                    <a href="{{url_for('result', page=products.next_num, q=request.args.get('q', ''), min=request.args.get('min', 0), max=request.args.get('max', 100000), order=request.args.get('order', 'date_new'))}}" class="btn btn-outline-info btn-sm mt-3">Next</a>
+                {% endif %}
+            </div>
+
+        </div>
+    </div>
+</div>
+
+{% endblock content%}

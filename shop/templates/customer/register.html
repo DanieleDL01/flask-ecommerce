@@ -1,0 +1,82 @@
+{% extends 'layout.html' %}
+{% block content %}
+    {% from "_formhelpers.html" import render_field %}
+    <div class="container">
+        <div class="row">
+            <div class="col-md-2"></div>
+            <div class="col-md-8">
+                <h2 class="bg-info text-center">Register</h2>
+            </div>
+            <div class="col-md-2"></div>
+        </div>
+        <form action="" method="POST" enctype="multipart/form-data">
+            {{form.csrf_token}}
+            <div class="row">
+                <div class="col-md-2"></div>
+                <div class="col-md-4">
+                    {{ render_field(form.name, class="form-control") }}
+                    {{ render_field(form.username, class="form-control") }}
+                    {{ render_field(form.email, class="form-control") }}
+                    {{ render_field(form.password, class="form-control") }}
+                    {{ render_field(form.confirm, class="form-control") }}
+                    {{ render_field(form.profile, class="form-control", required=False )}}
+                    <div class="form-check">
+                        <input class="form-check-input" type="radio" name="seller" id="seller2" value="0" checked>
+                        <label class="form-check-label" for="seller2">
+                            Regular
+                        </label>
+                    </div>
+                    <div class="form-check">
+                        <input class="form-check-input" type="radio" name="seller" id="seller1" value="1">
+                        <label class="form-check-label" for="seller1">
+                            Seller
+                        </label>
+                    </div>
+
+
+        </label>
+                </div>
+                <div class="col-md-4">
+                    {{ render_field(form.contact, class="form-control") }}
+                    {{ render_field(form.country, class="form-control") }}
+                    {{ render_field(form.state, class="form-control") }}
+                    {{ render_field(form.city, class="form-control") }}
+                    {{ render_field(form.zipcode, class="form-control") }}
+                    {{ render_field(form.address, class="form-control") }}
+
+                </div>
+                <div class="col-md-2"></div>
+
+            </div>
+            <div class="row">
+                <hr>
+            </div>
+            <div class="row">
+                <div class="col-md-2"></div>
+                <div class="col-md-4">
+                    {{form.submit(class="btn btn-info float-left")}}
+                </div>
+                <div class="col-md-4"></div>
+                <div class="col-md-2"></div>
+            </div>
+        </form>
+    </div>
+{% endblock content %}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

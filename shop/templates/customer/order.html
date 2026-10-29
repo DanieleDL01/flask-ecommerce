@@ -1,0 +1,105 @@
+{% extends 'layout.html' %}
+{% block content %}
+{% include 'navbar.html' %}
+
+
+<style>
+
+    /* Rimuove l'effetto clic sugli elementi della lista */
+    .dropdown-item {
+        pointer-events: none;
+        color: #333; /* Colore testo */
+    }
+    .border-right {
+        border-right: 1px dashed lightgray; /* Simile a <hr> */
+        padding-right: 10px; /* Spazio per non farlo attaccare al testo */
+    }
+</style>
+<div class="container mt-4">
+    {% include '_messages.html' %}
+    <div class="row">
+        <div class="col-md-12">
+            <b>Invoice: {{orders.invoice}}</b>
+            <br>
+            Customer name: {{customer.name}}
+            <br>
+            Customer email: {{customer.email}}
+            <br>
+            Customer contact: {{customer.contact}}
+            <br>
+
+            <br>
+
+            <table class="table table-sm">
+                <thead>
+                    <th>Sr</th>
+                    <th>Seller</th>
+                    <th>Name</th>
+                    <th>Color</th>
+                    <th>Quantity</th>
+                    <th>Price</th>
+                    <th>Discount</th>
+                    <th class="border-right">Subtotal</th>
+                    <th>Status</th>
+
+                </thead>
+                <tbody>
+                    {% for product in lista %}
+                        {% set discount = "%.2f" | format((product[0].discount / 100) * (product[0].price | float)) %}
+                        <tr>
+                            <td>{{loop.index}}</td>
+                            {% if product[1]==True %}
+                                <td class="dropdown">
+                                    <span>{{product[2].username}}</span>
+                                    <a class="dropdown-toggle" role="button" data-toggle="dropdown" aria-expanded="false">
+
+                                    </a>
+                                    <div class="dropdown-menu">
+                                        <span class="dropdown-item">ID: {{product[2].id}}</span>
+                                        <span class="dropdown-item">Email: {{product[2].email}}</span>
+                                        <span class="dropdown-item">Phone: {{product[2].contact}}</span>
+                                    </div>
+                                </td>
+                            {% else %}
+                                <td>Profile Deleted</td>
+                            {% endif %}
+                            <td>{{product[0].name}}</td>
+                            <td>{{product[0].color|capitalize}}</td>
+                            <td>{{product[0].quantity}}</td>
+                            <td>{{ "%.2f" | format(product[0].price | float) }}€</td>
+                            {% if product[0].discount > 0 %}
+                                <td>{{product[0].discount}}%</td>
+                            {% else %}
+                                <td>-</td>
+                            {% endif %}
+                            {% set subtotal = (product[0].quantity | int) * (product[0].price | float) %}
+                            <td class="border-right">{{ "%.2f" | format(subtotal - (discount | float)) }}€</td>
+                            <td>{{product[0].status}}</td>
+                        </tr>
+                    {% endfor %}
+                    <tr>
+                        <td></td>
+                        <td><a></a></td>
+                        <td colspan="3"></td>
+                        <td></td>
+                        <td><h4>Total: </h4></td>
+                        <td><h4>{{"%.2f" | format(grandtotal)}}€</h4></td>
+                        <td></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+    document.querySelectorAll(".dropdown-menu").forEach(menu => {
+        menu.addEventListener("click", function (event) {
+            event.stopPropagation();
+        });
+    });
+});
+</script>
+
+{% endblock content %}
+

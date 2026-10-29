@@ -1,0 +1,108 @@
+
+<!-- navbar starts -->
+<div class="container">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+
+
+    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+
+          <a class="navbar-brand" href="/">Home</a>
+          <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+          </button>
+
+          <div class="collapse navbar-collapse" id="navbarSupportedContent">
+            <ul class="navbar-nav mr-auto">
+
+              <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" href="#" role="button" data-toggle="dropdown" aria-expanded="false">
+                  Brands
+                </a>
+                <div class="dropdown-menu">
+                    {% for brand in brands %}
+                        <a class="dropdown-item" href="{{url_for('get_brand', id=brand.id)}}">{{brand.name}}</a>
+                    {% endfor %}
+                </div>
+              </li>
+
+              <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" href="#" role="button" data-toggle="dropdown" aria-expanded="false">
+                  Categories
+                </a>
+                <div class="dropdown-menu">
+                    {% for category in categories %}
+                        <a class="dropdown-item" href="{{url_for('get_category', id=category.id)}}">{{category.name}}</a>
+                    {% endfor %}
+                </div>
+              </li>
+
+                {% if current_user.is_authenticated %}
+                    <li class="nav-item">
+                        <a href="{{url_for('profile')}}" class="nav-link">{{current_user.name}}</a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="{{url_for('customerLogout')}}" class="nav-link">Logout</a>
+                    </li>
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" role="button" data-toggle="dropdown" aria-expanded="false">
+                            <i class="fa-solid fa-bell"></i>
+                        </a>
+                        <div class="dropdown-menu">
+                            {% for notification in notifications %}
+                                <a> {{notification.date_created}}:</a><a class="dropdown-item" href="{{url_for('orders', invoice=notification.order_invoice)}}"> {{notification.text}}</a>
+                                <hr>
+                            {% endfor %}
+                        </div>
+                    </li>
+
+                {% else %}
+                    <li class="nav-item">
+                        <a href="{{url_for('customer_registration')}}" class="nav-link">Sing in</a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="{{url_for('customerLogin')}}" class="nav-link">Login</a>
+                    </li>
+                {% endif %}
+
+                {% if current_user.is_authenticated and current_user.seller==False %}
+                  <li class="nav-item">
+                    <a class="nav-link" href="{{url_for('getcart')}}" tabindex="-1">Cart ({{session['Shoppingcart']|length}})</a>
+                  </li>
+                {% endif %}
+
+
+            </ul>
+            <form class="form-inline my-2 my-lg-0" action="{{url_for('result')}}">
+                <input class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search" name="q">
+                <button class="btn btn-outline-success my-2 my-sm-0" type="submit">
+                    <i class="fa-solid fa-magnifying-glass"></i>
+                </button>
+                <div class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" role="button" data-toggle="dropdown" aria-expanded="false">
+                        Price-Range
+                    </a>
+                    <div class="dropdown-menu">
+
+                        <div class="input-group mr-sm-2">
+                            <input class="form-control" type="number" id="minPrice" name="min" placeholder="Min" value="">
+                            <div class="input-group-append">
+                                <span class="input-group-text">€</span>
+                            </div>
+                        </div>
+
+
+                        <div class="input-group mr-sm-2">
+                            <input class="form-control" type="number" id="maxPrice" name="max" placeholder="Max" value="">
+                            <div class="input-group-append">
+                                <span class="input-group-text">€</span>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </form>
+          </div>
+
+    </nav>
+</div>
+<!-- navbar ends -->

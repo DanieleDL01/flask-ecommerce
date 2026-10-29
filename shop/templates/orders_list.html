@@ -1,0 +1,82 @@
+<div class="container mt-5">
+    <table class="table table-sm table-condensed table-striped">
+        <thead>
+            <th>Invoice</th>
+            <th>Order Date</th>
+            {% if current_user.seller == True %}
+                <th>Customer ID</th>
+            {% else %}
+                <th>Seller ID</th>
+            {% endif %}
+            <th>Product ID</th>
+            <th>Quantity</th>
+            <th>Color</th>
+            <th>Status</th>
+            {% if current_user.seller == True %}
+                <th>Update Status</th>
+            {% else %}
+                <th>Order Details</th>
+            {% endif %}
+        </thead>
+        <tbody>
+            {% for order in order_data %}
+                <tr>
+                    <td>{{order.order_invoice}}</td>
+                    <td>{{order.date}}</td>
+                    <td>{{order.customer_id}}</td>
+                    <td>{{order.product_id}}</td>
+                    <td>{{order.quantity}}%</td>
+                    <td>{{order.color}}</td>
+                    <td>{{order.status}}</td>
+                    {% if current_user.seller == True %}
+                        <!--<a href="{{url_for('single_page', id=order.product_id)}}" class="btn btn.sm btn-warning">Status</a>-->
+
+                        <td>
+                            <b class="nav-item dropdown">
+                                <p class="nav-link dropdown-toggle" href="#" role="button" data-toggle="dropdown" aria-expanded="false">
+                                    Status
+                                </p>
+                                <div class="dropdown-menu">
+                                     <form action="{{url_for('update_status', invoice=order.order_invoice, product_id=order.product_id)}}" method="POST">
+                                        {% set sts = [
+                                            "Pending",
+                                            "Processing",
+                                            "Confirmed",
+                                            "Shipped",
+                                            "In Transit",
+                                            "Out for Delivery",
+                                            "Delivered",
+                                            "Completed",
+                                            "Cancelled",
+                                            "Returned",
+                                            "Refunded",
+                                            "Failed",
+                                            "On Hold",
+                                            "Awaiting Payment",
+                                            "Awaiting Pickup",
+                                            "Partially Shipped"
+                                        ]%}
+                                        <label for="status"></label>
+                                        <select name="status" id="status">
+                                            <option value="{{order.status}}" style="display: none">{{order.status}}</option>
+                                            {% for status in sts %}
+                                                {% set col = status %}
+                                                <option value="{{col}}">{{col}}</option>
+                                            {% endfor %}
+                                        </select>
+                                         <button type="submit" class="btn btn-sm btn-info float">Update</button>
+                                     </form>
+                                </div>
+                            </b>
+                        </td>
+
+                    {% else %}
+
+                    {% endif %}
+                    <td><a href="{{url_for('orders', invoice=order.order_invoice)}}" class="btn btn.sm btn-warning">Order</a></td>
+                </tr>
+
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
